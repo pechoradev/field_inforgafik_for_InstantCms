@@ -1,0 +1,227 @@
+.infographic-container {
+    position: relative;
+    width: 100%;
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.infographic-full {
+    padding: 25px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fc 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.infographic-compact {
+    padding: 15px;
+    background: white;
+    border: 1px solid #e3e6f0;
+    border-radius: 8px;
+}
+
+.infographic-minimal {
+    padding: 10px;
+    background: transparent;
+}
+
+.infographic-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    transition: all 0.3s ease;
+}
+
+.infographic-container canvas:hover {
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+}
+
+.infographic-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    padding: 40px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+    border-radius: 16px;
+    color: #6c757d;
+}
+
+.infographic-empty-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.infographic-empty-text {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.infographic-empty-hint {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.infographic-container canvas {
+    animation: fadeIn 0.8s ease-out;
+}
+
+.chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: white;
+    border-radius: 50px;
+    border: 1px solid rgba(0,0,0,0.05);
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.legend-item:hover {
+    background: #f8f9fc;
+    border-color: #4e73df;
+    transform: translateY(-2px);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-label {
+    color: #5a5c69;
+}
+
+.legend-value {
+    font-weight: 600;
+    color: #4e73df;
+}
+
+.infographic-tooltip {
+    position: fixed;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: tooltipFade 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@keyframes tooltipFade {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .infographic-full {
+        padding: 15px;
+    }
+    
+    .chart-legend {
+        border-radius: 12px;
+    }
+    
+    .legend-item {
+        flex: 1 1 calc(50% - 10px);
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .infographic-container {
+        height: 300px !important;
+    }
+    
+    .legend-item {
+        flex: 1 1 100%;
+    }
+}
+
+.infographic-chart-title {
+    margin: 0 0 15px 0;
+    padding: 0;
+    color: #2c3e50;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.infographic-chart-title.infographic-title-top {
+    margin-bottom: 15px;
+}
+
+.infographic-chart-title.infographic-title-bottom {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.infographic-chart-title.infographic-title-left {
+    float: left;
+    width: 20%;
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+.infographic-chart-title.infographic-title-right {
+    float: right;
+    width: 20%;
+    margin-left: 15px;
+    margin-bottom: 0;
+}
+
+.infographic-wrapper {
+    clear: both;
+}
+
+@media (max-width: 768px) {
+    .infographic-chart-title.infographic-title-left,
+    .infographic-chart-title.infographic-title-right {
+        float: none;
+        width: 100%;
+        margin: 0 0 15px 0;
+        text-align: center;
+    }
+}

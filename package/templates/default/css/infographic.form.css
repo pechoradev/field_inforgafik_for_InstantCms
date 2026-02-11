@@ -1,0 +1,323 @@
+.infographic-field {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.infographic-type-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.infographic-type-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 80px;
+    background: #f8f9fc;
+    border: 2px solid #e3e6f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.infographic-type-btn:hover {
+    border-color: #4e73df;
+    background: #f1f5ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(78,115,223,0.1);
+}
+
+.infographic-type-btn.active {
+    border-color: #4e73df;
+    background: #4e73df;
+}
+
+.infographic-type-btn.active .type-icon,
+.infographic-type-btn.active .type-name {
+    color: white;
+}
+
+.type-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+    color: #5a5c69;
+}
+
+.type-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #5a5c69;
+    text-align: center;
+}
+
+.infographic-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #e3e6f0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    animation: slideIn 0.3s ease;
+}
+
+.infographic-item:hover {
+    border-color: #4e73df;
+    box-shadow: 0 4px 12px rgba(78,115,223,0.1);
+}
+
+.infographic-item.dragging {
+    opacity: 0.7;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    cursor: move;
+}
+
+.infographic-item.item-added {
+    animation: pulse 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(78,115,223,0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(78,115,223,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(78,115,223,0);
+    }
+}
+
+.item-sort {
+    margin-right: 15px;
+    padding-top: 8px;
+}
+
+.sort-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: #f8f9fc;
+    border: 1px solid #d1d3e2;
+    border-radius: 4px;
+    color: #858796;
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.sort-handle:hover {
+    background: #e3e6f0;
+    color: #4e73df;
+}
+
+.item-content {
+    flex: 1;
+}
+
+.item-color-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.color-value {
+    opacity: 0.9;
+}
+
+.item-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.remove-item {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infographic-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fc;
+    border-radius: 6px;
+}
+
+.infographic-stats {
+    font-size: 13px;
+    color: #858796;
+}
+
+.min-items-hint {
+    color: #e74a3b;
+    margin-left: 5px;
+}
+
+.infographic-empty {
+    text-align: center;
+    padding: 40px;
+    background: #f8f9fc;
+    border-radius: 8px;
+}
+
+.infographic-empty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.infographic-empty-text {
+    color: #858796;
+    font-size: 16px;
+}
+
+.infographic-live-preview {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+    border-radius: 12px;
+    border: 1px solid #e3e6f0;
+}
+
+.infographic-live-preview h6 {
+    margin-bottom: 15px;
+    color: #4e73df;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.preview-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.infographic-hint {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #f8f9fc;
+    border-radius: 6px;
+    color: #5a5c69;
+    font-size: 12px;
+}
+
+.infographic-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.item-placeholder {
+    background: linear-gradient(45deg, #f8f9fc 25%, #e9ecef 25%, #e9ecef 50%, #f8f9fc 50%, #f8f9fc 75%, #e9ecef 75%, #e9ecef);
+    background-size: 20px 20px;
+    border: 2px dashed #adb5bd;
+    border-radius: 8px;
+    min-height: 80px;
+}
+
+@media (max-width: 768px) {
+    .infographic-type-buttons {
+        justify-content: center;
+    }
+    
+    .infographic-type-btn {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .type-icon {
+        font-size: 24px;
+    }
+    
+    .type-name {
+        font-size: 10px;
+    }
+    
+    .infographic-item .form-row > div {
+        margin-bottom: 10px;
+    }
+}
+
+.infographic-title-field {
+    padding: 15px;
+    background: #f8f9fc;
+    border-radius: 8px;
+    border: 1px solid #e3e6f0;
+    margin-bottom: 20px;
+}
+
+.infographic-title-field .form-label {
+    font-weight: 600;
+    color: #4e73df;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.infographic-title-field .chart-title-input {
+    border: 1px solid #d1d3e2;
+    transition: all 0.2s;
+}
+
+.infographic-title-field .chart-title-input:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.infographic-title-field .form-text {
+    font-size: 12px;
+    margin-top: 5px;
+}
