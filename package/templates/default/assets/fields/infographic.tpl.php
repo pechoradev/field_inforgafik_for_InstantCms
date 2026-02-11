@@ -20,7 +20,6 @@ $title_tag = $field->data['title_tag'] ?? 'h3';
 $title_position = $field->data['title_position'] ?? 'top';
 $suffix_options = array_map('trim', explode(',', $value_suffix));
 $suffix_options = array_filter($suffix_options);
-
 $current_count = count($items);
 $user_chart_type = isset($value['user_chart_type']) ? $value['user_chart_type'] : $chart_type;
 
@@ -68,15 +67,7 @@ $color_palette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c6
                            style="display: none;">
                     <span class="type-icon">
                         <?php 
-                        $icons = [
-                            'pie' => '🥧',
-                            'doughnut' => '🍩',
-                            'bar' => '📊',
-                            'horizontalBar' => '📈',
-                            'line' => '📉',
-                            'radar' => '🕸️',
-                            'polarArea' => '🎯'
-                        ];
+                        $icons = ['pie' => '🥧','doughnut' => '🍩','bar' => '📊','horizontalBar' => '📈','line' => '📉','radar' => '🕸️','polarArea' => '🎯'];
                         echo $icons[$type_key] ?? '📊';
                         ?>
                     </span>
@@ -124,35 +115,20 @@ $color_palette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c6
                         <div class="item-content">
                             <div class="form-row align-items-center">
                                 <div class="col-md-5">
-                                    <input type="text" 
-                                           name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][label]" 
-                                           value="<?php echo htmlspecialchars($item['label']); ?>" 
-                                           class="form-control label-input" 
-                                           placeholder="Название"
-                                           required>
+                                    <input type="text" name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][label]" value="<?php echo htmlspecialchars($item['label']); ?>" class="form-control label-input" placeholder="Название" required>
                                 </div>
                                 
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <input type="number" 
-                                               name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][value]" 
-                                               value="<?php echo htmlspecialchars($item['value']); ?>" 
-                                               class="form-control value-input" 
-                                               min="0" 
-                                               step="any"
-                                               placeholder="Значение"
-                                               required>
+                                        <input type="number" name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][value]" value="<?php echo htmlspecialchars($item['value']); ?>" class="form-control value-input" min="0" step="any"placeholder="Значение" required>
                                         
                                         <?php if (!empty($suffix_options)) { ?>
                                             <div class="input-group-append">
                                                 <?php if (count($suffix_options) == 1) { ?>
                                                     <span class="input-group-text"><?php echo htmlspecialchars($suffix_options[0]); ?></span>
-                                                    <input type="hidden" 
-                                                           name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][suffix]" 
-                                                           value="<?php echo htmlspecialchars($suffix_options[0]); ?>">
+                                                    <input type="hidden" name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][suffix]" value="<?php echo htmlspecialchars($suffix_options[0]); ?>">
                                                 <?php } else { ?>
-                                                    <select name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][suffix]" 
-                                                            class="custom-select suffix-select">
+                                                    <select name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][suffix]" class="custom-select suffix-select">
                                                         <option value="">Выберите</option>
                                                         <?php foreach ($suffix_options as $suffix) { ?>
                                                             <option value="<?php echo htmlspecialchars($suffix); ?>" 
@@ -182,10 +158,7 @@ $color_palette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c6
                                 </div>
                             </div>
                             
-                            <input type="hidden" 
-                                   name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][ordering]" 
-                                   value="<?php echo $index; ?>" 
-                                   class="item-order">
+                            <input type="hidden" name="<?php echo $element_name; ?>[items][<?php echo $index; ?>][ordering]" value="<?php echo $index; ?>" class="item-order">
                         </div>
                     </div>
                 <?php } ?>
@@ -216,6 +189,14 @@ $color_palette = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c6
                 , минимум: не требуется
             <?php } ?>
         </small>
+    </div>
+
+    <div id="infographic_values_<?php echo $id; ?>" class="infographic-values-container mt-4" style="display: none;">
+        <div class="infographic-values-header">
+            <span class="infographic-values-title">Значения:</span>
+            <span class="infographic-values-total"></span>
+        </div>
+        <div class="infographic-values-list" id="infographic_values_list_<?php echo $id; ?>"></div>
     </div>
 
 </div>

@@ -103,7 +103,6 @@ class fieldInfographic extends cmsFormField {
             ]),
             new fieldList('title_position', [
                 'title'   => 'Положение заголовка',
-                'hint'    => 'Выберите, в каком месте будет отображаться заголовок диаграммы',
                 'default' => 'top',
                 'items'   => [
                     'top'    => 'Сверху',
@@ -311,12 +310,13 @@ class fieldInfographic extends cmsFormField {
     }
 
     private function getChartInitScript($chart_id, $data, $options) {
-        
+    
         $labels = json_encode($data['labels']);
         $values = json_encode($data['values']);
         $colors = json_encode($data['colors']);
         $suffixes = json_encode($data['suffixes']);
         $percents = json_encode($data['percents']);
+        $total = $data['total'];
         
         $chart_type = $options['chart_type'];
         $show_legend = $options['show_legend'] ? 'true' : 'false';
@@ -346,6 +346,7 @@ class fieldInfographic extends cmsFormField {
                     var colors = ' . $colors . ';
                     var suffixes = ' . $suffixes . ';
                     var percents = ' . $percents . ';
+                    var total = ' . $total . ';
                     
                     var data = {
                         labels: labels,
@@ -353,7 +354,7 @@ class fieldInfographic extends cmsFormField {
                             data: values,
                             backgroundColor: ' . ($chart_type === 'line' ? '"rgba(78, 115, 223, 0.1)"' : 'colors') . ',
                             borderColor: ' . ($chart_type === 'line' ? '"#4e73df"' : '"#ffffff"') . ',
-                            borderWidth: ' . ($chart_type === 'line' ? '2' : '2') . ',
+                            borderWidth: 2,
                             hoverBorderColor: "#ffffff",
                             hoverBorderWidth: 3,
                             pointBackgroundColor: ' . ($chart_type === 'line' ? '"#ffffff"' : 'colors') . ',
@@ -393,11 +394,10 @@ class fieldInfographic extends cmsFormField {
                                     var index = tooltipItem.index;
                                     var label = data.labels[index] || "";
                                     var value = dataset.data[index] || 0;
-                                    var suffix = suffixes[index] || "";
+                                    var suffix = (suffixes && suffixes[index] !== undefined) ? suffixes[index] : "";
                                     var formatted = value.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, " ");
-                                    
-                                    if (' . $show_percents . ' && (data.datasets.length > 0)) {
-                                        var percent = percents[index] || 0;
+                                    if (' . $show_percents . ' && total > 0) {
+                                        var percent = (percents && percents[index] !== undefined) ? percents[index] : 0;
                                         return label + ": " + formatted + " " + suffix + " (" + percent + "%)";
                                     }
                                     
@@ -434,7 +434,7 @@ class fieldInfographic extends cmsFormField {
     }
 
     private function getChartSpecificOptions($chart_type, $begin_at_zero) {
-    
+
         if ($chart_type === 'doughnut') {
             return 'options.cutoutPercentage = 60;';
         }

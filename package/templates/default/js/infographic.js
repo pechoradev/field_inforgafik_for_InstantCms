@@ -15,6 +15,97 @@ icms.infographic = (function ($) {
         this.initSorting(field_id);
         this.initTypeSelector(field_id);
         this.initLivePreview(field_id);
+        this.initValuesDisplay(field_id);
+    };
+
+    this.initValuesDisplay = function(field_id) {
+        var self = this;
+        var container = $('#infographic_items_' + field_id);
+        
+        container.on('input', '.label-input, .value-input, .suffix-select', function() {
+            self.updateValuesDisplay(field_id);
+        });
+        
+        setTimeout(function() {
+            self.updateValuesDisplay(field_id);
+        }, 100);
+    };
+
+    this.updateValuesDisplay = function(field_id) {
+        var options = this.instances[field_id];
+        var valuesContainer = $('#infographic_values_' + field_id);
+        var valuesList = $('#infographic_values_list_' + field_id);
+        var items = [];
+        
+        $('#infographic_items_' + field_id + ' .infographic-item').each(function() {
+            var label = $(this).find('.label-input').val();
+            var value = $(this).find('.value-input').val();
+            var suffix = $(this).find('.suffix-select').val() || '';
+            
+            if (label && value && parseFloat(value) > 0) {
+                items.push({
+                    label: label,
+                    value: parseFloat(value),
+                    suffix: suffix
+                });
+            }
+        });
+        
+        var chart_type = options.chart_type;
+        var selected_type = $('#infographic_' + field_id + ' input[name$="[user_chart_type]"]:checked').val();
+        if (selected_type) {
+            chart_type = selected_type;
+        }
+        
+        var showValues = true;
+        var showPercents = false;
+        var showValuesField = $('input[name="show_values"]');
+        var showPercentsField = $('input[name="show_percents"]');
+        
+        if (showValuesField.length) {
+            showValues = showValuesField.is(':checked');
+        }
+        
+        if (showPercentsField.length) {
+            showPercents = showPercentsField.is(':checked');
+        }
+        
+        if (items.length === 0 || !showValues) {
+            valuesContainer.hide();
+            return;
+        }
+        
+        valuesContainer.show();
+        
+        var html = '';
+        var total = items.reduce(function(sum, item) { return sum + item.value; }, 0);
+        
+        items.forEach(function(item, index) {
+            var color_palette = options.color_palette || ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', '#858796'];
+            var color = color_palette[index % color_palette.length];
+            var percent = total > 0 ? Math.round((item.value / total) * 100) : 0;
+            var formattedValue = item.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            
+            html += '<div class="infographic-value-item">';
+            html += '<span class="value-color" style="background-color: ' + color + ';"></span>';
+            html += '<span class="value-label">' + this.escapeHtml(item.label) + ':</span>';
+            html += '<span class="value-number">' + formattedValue + '</span>';
+            html += '<span class="value-suffix">' + this.escapeHtml(item.suffix) + '</span>';
+            
+            if (showPercents) {
+                html += '<span class="value-percent">(' + percent + '%)</span>';
+            }
+            
+            html += '</div>';
+        }.bind(this));
+        
+        var totalFormatted = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        var totalSuffix = items[0] && items[0].suffix ? items[0].suffix : '';
+        $('#infographic_values_' + field_id + ' .infographic-values-total').html(
+            'Общее: <strong>' + totalFormatted + ' ' + this.escapeHtml(totalSuffix) + '</strong>'
+        );
+        
+        valuesList.html(html);
     };
 
     this.initSorting = function(field_id) {
@@ -37,6 +128,7 @@ icms.infographic = (function ($) {
                     ui.item.removeClass('dragging');
                     self.updateItemOrders(field_id);
                     self.updateLivePreview(field_id);
+                    self.updateValuesDisplay(field_id);
                 }
             });
         }
@@ -96,6 +188,7 @@ icms.infographic = (function ($) {
         }, 500);
         
         this.updateLivePreview(field_id);
+        this.updateValuesDisplay(field_id);
     };
 
     this.getItemHtml = function(field_id, index) {
@@ -201,6 +294,7 @@ icms.infographic = (function ($) {
             self.updateStats(field_id);
             self.updateItemOrders(field_id);
             self.updateLivePreview(field_id);
+            self.updateValuesDisplay(field_id);
         });
     };
 
@@ -251,6 +345,7 @@ icms.infographic = (function ($) {
             btn.find('input[type="radio"]').prop('checked', true);
             
             self.updateLivePreview(field_id);
+            self.updateValuesDisplay(field_id);
         });
     };
 
@@ -327,7 +422,6 @@ icms.infographic = (function ($) {
 
     this.renderPreview = function(field_id, items, chart_type) {
         var canvas = document.getElementById('preview_' + field_id);
-        
         if (!canvas) return;
         
         var ctx = canvas.getContext('2d');
@@ -338,9 +432,14 @@ icms.infographic = (function ($) {
         
         var labels = items.map(function(item) { return item.label; });
         var values = items.map(function(item) { return item.value; });
+        var suffixes = items.map(function(item) { return item.suffix || ''; });
+        var total = values.reduce(function(sum, val) { return sum + val; }, 0);
+        var percents = values.map(function(val) { 
+            return total > 0 ? Math.round((val / total) * 100) : 0; 
+        });
+        
         var colors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#5a5c69', '#858796'];
         var chartColors = [];
-        
         for (var i = 0; i < items.length; i++) {
             chartColors.push(colors[i % colors.length]);
         }
@@ -349,13 +448,13 @@ icms.infographic = (function ($) {
             labels: labels,
             datasets: [{
                 data: values,
-                backgroundColor: chart_type === 'line' ? 'rgba(78, 115, 223, 0.8)' : chartColors,
-                borderColor: '#ffffff',
+                backgroundColor: chart_type === 'line' ? 'rgba(78, 115, 223, 0.1)' : chartColors,
+                borderColor: chart_type === 'line' ? '#4e73df' : '#ffffff',
                 borderWidth: 2,
-                pointBackgroundColor: chartColors,
-                pointBorderColor: '#ffffff',
-                pointHoverBackgroundColor: '#e74a3b',
-                pointHoverBorderColor: '#ffffff'
+                pointBackgroundColor: chart_type === 'line' ? '#ffffff' : chartColors,
+                pointBorderColor: chart_type === 'line' ? '#4e73df' : '#ffffff',
+                pointRadius: chart_type === 'line' ? 3 : 2,
+                pointHoverRadius: chart_type === 'line' ? 5 : 4
             }]
         };
         
@@ -367,32 +466,76 @@ icms.infographic = (function ($) {
                 position: 'bottom',
                 labels: {
                     boxWidth: 10,
-                    fontSize: 10
+                    fontSize: 10,
+                    usePointStyle: true
+                }
+            },
+            tooltips: {
+                enabled: true,
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var index = tooltipItem.index;
+                        var label = data.labels[index] || '';
+                        var value = data.datasets[0].data[index] || 0;
+                        var suffix = suffixes[index] || '';
+                        var percent = percents[index] || 0;
+                        var formatted = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                        return label + ': ' + formatted + ' ' + suffix + ' (' + percent + '%)';
+                    }
                 }
             },
             animation: {
-                duration: 500
+                duration: 0
             }
         };
         
-        if (chart_type === 'bar' || chart_type === 'horizontalBar' || chart_type === 'line') {
+        if (chart_type === 'bar' || chart_type === 'line') {
             options.scales = {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        callback: function(value) {
+                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                        }
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 45
                     }
                 }]
             };
-            
-            if (chart_type === 'horizontalBar') {
-                options.scales = {
-                    xAxes: [{
-                        ticks: {
-                            beginAtZero: true
+        }
+        
+        if (chart_type === 'horizontalBar') {
+            options.scales = {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        callback: function(value) {
+                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                         }
-                    }]
-                };
-            }
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        maxRotation: 0,
+                        minRotation: 0
+                    }
+                }]
+            };
+        }
+        
+        if (chart_type === 'radar') {
+            options.scale = {
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                    }
+                }
+            };
         }
         
         if (chart_type === 'doughnut') {
